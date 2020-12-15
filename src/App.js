@@ -1,25 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react';
+import FormLogin from './views/FormLogin';
+import FormRegister from './views/FormRegister';
+import { ThemeProvider } from '@material-ui/styles';
+import theme from './theme';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+const App = () => {
+  
+  const [switchForm, setSwitchForm] = React.useState(true);
+
+  const handleClick = () => {
+    setSwitchForm(!switchForm)
+  };
+  if(switchForm){
+    return (
+      <ThemeProvider theme={theme}>
+        <FormLogin 
+          handleClick={handleClick}/>
+      </ThemeProvider>
+    );
+  }
+  else{
+    return (
+      <ThemeProvider theme={theme}>
+        <FormRegister
+          handleClick={handleClick}/>
+      </ThemeProvider>
+    );
+  }
 }
 
 export default App;
