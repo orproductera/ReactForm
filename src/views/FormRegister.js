@@ -1,3 +1,4 @@
+import React from 'react';
 import MuiLink  from '@material-ui/core/Link';
 import MuiBox  from '@material-ui/core/Box';
 import MuiFormControl  from '@material-ui/core/FormControl';
@@ -5,6 +6,7 @@ import MuiFormLabel from '@material-ui/core/FormLabel';
 import MuiButton from '@material-ui/core/Button';
 import MuiCheckbox from '@material-ui/core/Checkbox';
 import VisibilityIcon from '../components/visibleEye'
+import HiddenIcon from '../components/hiddenEye'
 import MuiFormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiTextField  from '@material-ui/core/TextField';
@@ -122,15 +124,26 @@ const Button = withStyles((theme) =>({
 
 const Link = withStyles((theme) =>({
     root: {
+        marginLeft: 'auto',
+        marginRight: 0,
         textAlign: 'right',
         ...typography.buttonLinkText,
         letterSpacing: '0.46px',
         textTransform: 'uppercase',
         marginBottom: '14px',
         textDecoration: 'none',
+        padding: '4px 34.5px',
+        width: 110,
+        border: '1px solid' + palette.input.bg,
+        borderRadius: 15,
         cursor: 'pointer',
+        transition: 'all 0.2s ease',
         '&:hover':{
-            textDecoration: 'none'
+            textDecoration: 'none',
+            borderColor: palette.basic.lihtBlue
+        },
+        '&:active':{
+            color: palette.basic.darkBlue
         }
     }
 }))(MuiLink);
@@ -155,6 +168,10 @@ const useStyles = makeStyles((theme) => ({
     },
     twoChild:{
         marginLeft: 10
+    },
+    borderForm: {
+        border: '1px solid' + palette.input.bg,
+        borderRadius: 15,
     }
 }));
 function BlueText (){
@@ -167,25 +184,34 @@ function RedditTextField(props) {
   }
 const FormRegister = ({handleClick}) =>{
     const classes = useStyles();
+    const [see, setSee] = React.useState(true);
+
+    const switchEyeClick = () => {
+        setSee(!see);
+        const password = document.getElementById('reddit-password')
+        !see ? password.type = 'password' : password.type = 'text'
+      };
+
     return (
-        <Box >
-            <Link onClick={handleClick} className={classes.typography}>
-                Login
-            </Link>
+        <Box>
+        <Link onClick={handleClick} className={classes.typography}>
+            Login
+        </Link>
+        <form className={classes.borderForm}>
             <FormControl>
-                <FormLabel>Register Productera CRM</FormLabel>
+                <FormLabel focused={false}>Register Productera CRM</FormLabel>
                 <FormGroup row className={classes.displayFlex}>
                     <RedditTextField
                         label="First Name"
                         variant="filled"
-                        id="reddit-input"
+                        id="reddit-firstName"
                         type='text'
                         className={classes.fistChild}
                     />
                     <RedditTextField
                         label="Last Name"
                         variant="filled"
-                        id="reddit-input"
+                        id="reddit-lastName"
                         type='text'
                         className={classes.twoChild}
                     />
@@ -193,19 +219,26 @@ const FormRegister = ({handleClick}) =>{
                 <RedditTextField
                     label="Email"
                     variant="filled"
-                    id="reddit-input"
-                    type='text'
+                    id="reddit-email"
+                    type='email'
                 />
                 
                 <RedditTextField
                     label="Password"
                     variant="filled"
-                    id="reddit-input"
+                    id="reddit-password"
                     type='password'
                     className={classes.lastChild}
                     InputProps={{
                         endAdornment: (
-                          <VisibilityIcon position="start" />
+                            see ? 
+                          <VisibilityIcon 
+                            position="start"
+                            click={switchEyeClick} />
+                          : 
+                          <HiddenIcon 
+                            position="start"
+                            click={switchEyeClick} />
                         ),
                       }}
                 />
@@ -219,6 +252,7 @@ const FormRegister = ({handleClick}) =>{
                 /><Button>register</Button>
                 
             </FormControl>
+        </form>
         </Box>
     )
 }

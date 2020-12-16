@@ -1,3 +1,4 @@
+import React from 'react';
 import MuiLink  from '@material-ui/core/Link';
 import MuiBox  from '@material-ui/core/Box';
 import MuiFormControl  from '@material-ui/core/FormControl';
@@ -5,6 +6,7 @@ import MuiFormLabel from '@material-ui/core/FormLabel';
 import MuiButton from '@material-ui/core/Button';
 import MuiCheckbox from '@material-ui/core/Checkbox';
 import VisibilityIcon from '../components/visibleEye'
+import HiddenIcon from '../components/hiddenEye'
 import MuiFormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiTextField  from '@material-ui/core/TextField';
@@ -62,6 +64,9 @@ const TextField = withStyles((theme) =>({
         '& .MuiFilledInput-underline:after': {
             border: 'none',
         },
+        '& .MuiInputBase-root': {
+            cursor: 'pointer',
+        }
     },
 }))(MuiTextField);
 
@@ -101,7 +106,7 @@ const FormLabel = withStyles((theme) =>({
     root: {
         ...typography.h5,
         marginBottom: '20px',
-    }
+    },
 }))(MuiFormLabel);
 
 const Button = withStyles((theme) =>({
@@ -121,15 +126,26 @@ const Button = withStyles((theme) =>({
 
 const Link = withStyles((theme) =>({
     root: {
+        marginLeft: 'auto',
+        marginRight: 0,
         textAlign: 'right',
         ...typography.buttonLinkText,
         letterSpacing: '0.46px',
         textTransform: 'uppercase',
         marginBottom: '14px',
         textDecoration: 'none',
+        padding: '4px 29px',
+        width: 129,
+        border: '1px solid' + palette.input.bg,
+        borderRadius: 15,
         cursor: 'pointer',
+        transition: 'all 0.2s ease',
         '&:hover':{
-            textDecoration: 'none'
+            textDecoration: 'none',
+            borderColor: palette.basic.lihtBlue
+        },
+        '&:active':{
+            color: palette.basic.darkBlue
         }
     }
 }))(MuiLink);
@@ -139,39 +155,62 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '12px',
         borderRadius: 15,
         fill: palette.input.icon,
-        border: 'none'
+        border: 'none',
+        "&svg":{
+            cursor: 'pointer'
+        }
     },
+    borderForm: {
+        border: '1px solid' + palette.input.bg,
+        borderRadius: 15,
+    }
 }));
 function RedditTextField(props) {
   
     return <TextField InputProps={{  disableUnderline: true }} {...props} />;
   }
-const FormLogin = ({ handleClick}) =>{
+const FormLogin = ({ handleClick }) =>{
     const classes = useStyles();
+    const [see, setSee] = React.useState(true);
+
+    const switchEyeClick = () => {
+        setSee(!see);
+        const password = document.getElementById('reddit-password')
+        !see ? password.type = 'password' : password.type = 'text'
+      };
+
     return (
         <Box >
-            <Link onClick={handleClick} className={classes.typography}>
-                Register
-            </Link>
+        <Link  onClick={handleClick} className={classes.typography}>
+            Register
+        </Link>
+        <form className={classes.borderForm}>
             <FormControl>
-                <FormLabel>Login</FormLabel>
+                <FormLabel focused={false}>Login</FormLabel>
                 
                 <RedditTextField
                     label="Email"
                     variant="filled"
-                    id="reddit-input"
-                    type='text'
+                    id="reddit-email"
+                    type='email'
                 />
                 
                 <RedditTextField
                     label="Password"
                     variant="filled"
-                    id="reddit-input"
+                    id="reddit-password"
                     type='password'
                     className={classes.lastChild}
                     InputProps={{
                         endAdornment: (
-                          <VisibilityIcon position="start" />
+                            see ? 
+                          <VisibilityIcon 
+                            position="start"
+                            click={switchEyeClick} />
+                          : 
+                          <HiddenIcon 
+                            position="start"
+                            click={switchEyeClick} />
                         ),
                       }}
                 />
@@ -185,6 +224,7 @@ const FormLogin = ({ handleClick}) =>{
                 /><Button>login</Button>
                 
             </FormControl>
+        </form>
         </Box>
     )
 }

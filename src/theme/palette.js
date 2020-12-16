@@ -8,7 +8,7 @@ export default {
     basic: {
         contrastText: white,
         lihtBlue: '#4675EE',
-        darkBlue: '#2a62f5',
+        darkBlue: '#2D5EDB',
         gray: '#828282'
     },
     input: {
